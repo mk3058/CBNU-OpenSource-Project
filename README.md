@@ -2,7 +2,9 @@
 충북대학교 2학년 1학기 오픈소스 기초 프로젝트 과목 레포입니다.
 
 ## ✏️ Project Description
-  작성 예정
+spring framework를 통한 게시판 만들기
+# jwt 기반 인증, 인가 구현
+# 개발 기간 : 2023.04.18 ~ 2023.05.13
 
 ## ⚙️ Stacks
 ### Development
