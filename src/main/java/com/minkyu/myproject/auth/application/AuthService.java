@@ -8,6 +8,7 @@ import com.minkyu.myproject.auth.domain.Token;
 import com.minkyu.myproject.auth.domain.repository.RefreshTokenRepository;
 import com.minkyu.myproject.auth.presentation.dto.JoinRequest;
 import com.minkyu.myproject.auth.presentation.dto.LoginRequest;
+import com.minkyu.myproject.common.exception.NotFoundException;
 import com.minkyu.myproject.common.model.Id;
 import com.minkyu.myproject.security.jwt.Jwt;
 import com.minkyu.myproject.user.domain.Email;
@@ -18,7 +19,6 @@ import jakarta.persistence.Access;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import java.net.URI;
 import java.time.Instant;
