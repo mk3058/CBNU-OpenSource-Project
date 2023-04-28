@@ -53,6 +53,10 @@ public class RefreshToken {
         return value;
     }
 
+    public String value() {
+        return value;
+    }
+
     public LocalDateTime getExpiresAt() {
         return expiresAt;
     }
