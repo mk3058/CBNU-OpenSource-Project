@@ -26,8 +26,8 @@ public class JwtAuthTokenFilter extends GenericFilter {
 
     private final Jwt jwt;
 
-    public JwtAuthTokenFilter(JwtProperties jwtProperties, Jwt jwt) {
-        this.properties = jwtProperties;
+    public JwtAuthTokenFilter(JwtProperties properties, Jwt jwt) {
+        this.properties = properties;
         this.jwt = jwt;
     }
 
@@ -57,6 +57,8 @@ public class JwtAuthTokenFilter extends GenericFilter {
                 }
             }
         }
+
+        chain.doFilter(request, response);
     }
 
     private String obtainAccessToken(HttpServletRequest request) {
