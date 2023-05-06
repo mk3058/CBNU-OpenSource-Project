@@ -26,35 +26,38 @@ async function fetchWeatherData(NX, NY) {
   }
 }
 
-function extractChartData(weatherData) {
+function extractChartData(weatherData, category) {
   const { response } = weatherData;
   const { body } = response;
   const { items } = body;
   const { item } = items;
 
   return item
-    .filter(row => row.category === "POP" && row.baseTime === "2300")
+    .filter(row => row.category === category && row.baseTime === "2300")
     .map(row => ({
-      name: row.fcstDate,
+      name: row.fcstTime,
       value: row.fcstValue
     }));
 }
 
-function WeatherChart({ data }) {
+function WeatherChart({ data, title }) {
   return (
-    <LineChart
-      width={500}
-      height={300}
-      data={data}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-    >
-      <XAxis dataKey="name" />
-      <YAxis />
-      <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-    </LineChart>
+    <div>
+      <h2>{title}</h2>
+      <LineChart
+        width={500}
+        height={300}
+        data={data}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <XAxis dataKey="name" />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+      </LineChart>
+    </div>
   );
 }
 
@@ -90,6 +93,9 @@ const uniqueNeighborhoods = (city, district) => [
 ];
 
 function App() {
+  const [popChartData, setPopChartData] = useState([]);
+  const [tmpChartData, setTmpChartData] = useState([]);
+  const [wsdChartData, setWsdChartData] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
@@ -97,8 +103,9 @@ function App() {
 
   async function fetchData(nx, ny) {
     const weatherData = await fetchWeatherData(nx, ny);
-    const data = extractChartData(weatherData);
-    setChartData(data);
+    setPopChartData(extractChartData(weatherData, "POP"));
+    setTmpChartData(extractChartData(weatherData, "TMP"));
+    setWsdChartData(extractChartData(weatherData, "WSD"));
   }
 
   function handleSubmit(event) {
@@ -154,10 +161,11 @@ function App() {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      <WeatherChart data={chartData} />
+      <WeatherChart data={popChartData} title="강수확률" />
+      <WeatherChart data={tmpChartData} title="기온" />
+      <WeatherChart data={wsdChartData} title="풍속" />
     </div>
   );
-  
 }
 
 
