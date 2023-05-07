@@ -3,7 +3,7 @@ import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import locationData from './locations.json';
 
-const SERVICE_KEY = "#### API SERVICE KEY ####";
+const SERVICE_KEY = process.env.REACT_APP_SERVICE_KEY;
 const DATA_TYPE = "JSON";
 
 function getPreviousDate() {
@@ -96,6 +96,7 @@ function App() {
   const [popChartData, setPopChartData] = useState([]);
   const [tmpChartData, setTmpChartData] = useState([]);
   const [wsdChartData, setWsdChartData] = useState([]);
+  const [isLocationFound, setIsLocationFound] = useState(true);
   const [chartData, setChartData] = useState([]);
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
@@ -110,17 +111,28 @@ function App() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const { nx, ny } = getNxNy(city, district, neighborhood);
-    fetchData(nx, ny);
+    try {
+      const { nx, ny } = getNxNy(city, district, neighborhood);
+      setIsLocationFound(true);
+      fetchData(nx, ny);
+    } catch (error) {
+      console.error(error);
+      setIsLocationFound(false);
+    }
+  }   
+
+  function handleLocationChange() {
+    setIsLocationFound(true);
   }  
 
+  console.log(SERVICE_KEY);
   return (
     <div className="App">
-      <h1>Weather Visualization</h1>
+      <h1>Weather Visualizer</h1>
       <form onSubmit={handleSubmit}>
         <label>
           시/도:
-          <select value={city} onChange={(e) => setCity(e.target.value)}>
+          <select value={city} onChange={(e) => {setCity(e.target.value); handleLocationChange();}}>
             <option value="">Select City</option>
             {uniqueCities.map((city) => (
               <option key={city} value={city}>
@@ -133,7 +145,7 @@ function App() {
           시/군/구:
           <select
             value={district}
-            onChange={(e) => setDistrict(e.target.value)}
+            onChange={(e) => {setDistrict(e.target.value); handleLocationChange();}}
             disabled={!city}
           >
             <option value="">Select District</option>
@@ -148,7 +160,7 @@ function App() {
           읍/면/동:
           <select
             value={neighborhood}
-            onChange={(e) => setNeighborhood(e.target.value)}
+            onChange={(e) => {setNeighborhood(e.target.value); handleLocationChange();}}
             disabled={!district}
           >
             <option value="">Select Neighborhood</option>
@@ -159,11 +171,17 @@ function App() {
             ))}
           </select>
         </label>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit" disabled={!isLocationFound} />
       </form>
-      <WeatherChart data={popChartData} title="강수확률" />
-      <WeatherChart data={tmpChartData} title="기온" />
-      <WeatherChart data={wsdChartData} title="풍속" />
+      {isLocationFound ? (
+        <>
+          <WeatherChart data={popChartData} title="강수확률" />
+          <WeatherChart data={tmpChartData} title="기온" />
+          <WeatherChart data={wsdChartData} title="풍속" />
+        </>
+      ) : (
+        <p>No forecast points found. Please select a valid location.</p>
+      )}
     </div>
   );
 }
