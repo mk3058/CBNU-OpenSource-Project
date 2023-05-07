@@ -35,40 +35,39 @@ function extractChartData(weatherData, category) {
   return item
     .filter(row => row.category === category && row.baseTime === "2300")
     .map(row => ({
-      name: row.fcstTime,
+      name: row.fcstTime.slice(0, 2),
       value: row.fcstValue
     }));
 }
 
-function WeatherChart({ data, title, yUnit }) {
+function WeatherChart({ data, title, yUnit, lineColor }) {
   return (
     <div>
-      <h2>{title}</h2>
+      <h2 style={{ textAlign: "center", color: "darkgray" }}>{title}</h2>
       <LineChart
         width={700}
         height={400}
         data={data}
-        margin={{ top: 50, right: 50, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 50, left: 20, bottom: 35 }}
       >
-        <XAxis dataKey="name" label={{ value: "[시]", position: "right", offset: 20 }} />
+        <XAxis dataKey="name" label={{ value: "[시]", position: "right", offset: 15 }} />
         <YAxis
           label={{
             value: "[" + yUnit + "]",
-            position: "top",
+            position: "insideTopLeft",
             angle: 0,
-            offset: 20,
+            offset: 0,
             dy: 0,
           }}
         />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="value" stroke={lineColor} activeDot={{ r: 8 }} />
       </LineChart>
     </div>
   );
 }
-
 
 function getNxNy(city, district, neighborhood) {
   const location = locationData.find(
@@ -184,9 +183,9 @@ function App() {
       </form>
       {isLocationFound ? (
         <>
-        <WeatherChart data={popChartData} title="강수확률" yUnit="%" />
-        <WeatherChart data={tmpChartData} title="기온" yUnit="°" />
-        <WeatherChart data={wsdChartData} title="풍속" yUnit="m/s" />
+        <WeatherChart data={popChartData} title="강수확률" yUnit="%" lineColor="#8884d8" />
+        <WeatherChart data={tmpChartData} title="기온" yUnit="°" lineColor="#82ca9d" />
+        <WeatherChart data={wsdChartData} title="풍속" yUnit="m/s" lineColor="#ffc658" />
       </>      
       ) : (
         <p>No forecast points found. Please select a valid location.</p>
