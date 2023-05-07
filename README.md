@@ -11,3 +11,17 @@
 ### Environment
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/visual%20studio%20code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white">
 
+
+## 💻How to Run
+```
+- clone repo
+    git clone https://github.com/mk3058/CBNU-OpenSource-Project
+- install dependencies
+    npm install axios
+    npm install recharts 
+- run
+    npm start
+    
+ * Create ".env" containing the following in the project root folder
+  -> "REACT_APP_SERVICE_KEY=$$$$ YOUR SERVICE KEY $$$$"
+```
